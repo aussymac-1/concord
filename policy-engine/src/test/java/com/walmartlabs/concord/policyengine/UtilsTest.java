@@ -22,6 +22,7 @@ package com.walmartlabs.concord.policyengine;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,5 +54,43 @@ public class UtilsTest {
         long result = Utils.parseFileSize(s);
 
         assertEquals(100 * 1024, result);
+    }
+
+    @Test
+    public void testParseFileSizeNull() {
+        assertNull(Utils.parseFileSize(null));
+    }
+
+    @Test
+    public void testParseFileSizeMB() {
+        assertEquals(10L * 1024 * 1024, Utils.parseFileSize("10MB"));
+    }
+
+    @Test
+    public void testParseFileSizeGB() {
+        assertEquals(2L * 1024 * 1024 * 1024, Utils.parseFileSize("2GB"));
+    }
+
+    @Test
+    public void testParseFileSizeTB() {
+        assertEquals(1L * 1024 * 1024 * 1024 * 1024, Utils.parseFileSize("1TB"));
+    }
+
+    @Test
+    public void testMatchAnyMultiplePatterns() {
+        boolean result = Utils.matchAny(Arrays.asList("foo", "bar", "\\.concord"), ".concord");
+        assertTrue(result);
+    }
+
+    @Test
+    public void testMatchAnyNoMatch() {
+        boolean result = Utils.matchAny(Arrays.asList("foo", "bar"), "baz");
+        assertFalse(result);
+    }
+
+    @Test
+    public void testMatchesStringPattern() {
+        assertTrue(Utils.matches("hello.*", "hello world"));
+        assertFalse(Utils.matches("hello.*", "goodbye world"));
     }
 }

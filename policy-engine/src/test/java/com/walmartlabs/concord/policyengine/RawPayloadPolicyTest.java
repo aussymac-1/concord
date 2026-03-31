@@ -22,13 +22,14 @@ package com.walmartlabs.concord.policyengine;
 
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.io.TempDir;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RawPayloadPolicyTest {
 
@@ -44,6 +45,61 @@ public class RawPayloadPolicyTest {
 
         assertDeny(fiveBytes, p.resolve("test.bin"));
         assertAllow(tenBytes, p.resolve("test.bin"));
+    }
+
+    @Test
+    public void testNullRule(@TempDir Path tempDir) throws Exception {
+        Path file = tempDir.resolve("test.bin");
+        Files.write(file, new byte[100]);
+
+        RawPayloadPolicy policy = new RawPayloadPolicy(null);
+        CheckResult<RawPayloadRule, Long> result = policy.check(file);
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testNonExistentFile() throws Exception {
+        RawPayloadPolicy policy = new RawPayloadPolicy(RawPayloadRule.of("msg", 100L));
+        CheckResult<RawPayloadRule, Long> result = policy.check(Path.of("/tmp/nonexistent_xyz"));
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testDirectoryInsteadOfFile(@TempDir Path tempDir) throws Exception {
+        RawPayloadPolicy policy = new RawPayloadPolicy(RawPayloadRule.of("msg", 100L));
+        CheckResult<RawPayloadRule, Long> result = policy.check(tempDir);
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testExactlyAtLimit(@TempDir Path tempDir) throws Exception {
+        Path file = tempDir.resolve("exact.bin");
+        Files.write(file, new byte[100]);
+
+        RawPayloadPolicy policy = new RawPayloadPolicy(RawPayloadRule.of("msg", 100L));
+        CheckResult<RawPayloadRule, Long> result = policy.check(file);
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testOneByteOverLimit(@TempDir Path tempDir) throws Exception {
+        Path file = tempDir.resolve("over.bin");
+        Files.write(file, new byte[101]);
+
+        RawPayloadPolicy policy = new RawPayloadPolicy(RawPayloadRule.of("msg", 100L));
+        CheckResult<RawPayloadRule, Long> result = policy.check(file);
+        assertFalse(result.getDeny().isEmpty());
+        assertEquals(101L, (long) result.getDeny().get(0).getEntity());
+    }
+
+    @Test
+    public void testEmptyFile(@TempDir Path tempDir) throws Exception {
+        Path file = tempDir.resolve("empty.bin");
+        Files.write(file, new byte[0]);
+
+        RawPayloadPolicy policy = new RawPayloadPolicy(RawPayloadRule.of("msg", 100L));
+        CheckResult<RawPayloadRule, Long> result = policy.check(file);
+        assertTrue(result.getDeny().isEmpty());
     }
 
     private static void assertAllow(RawPayloadPolicy policy, Path p) throws IOException {
