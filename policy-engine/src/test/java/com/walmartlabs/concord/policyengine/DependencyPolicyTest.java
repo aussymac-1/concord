@@ -24,10 +24,10 @@ import com.walmartlabs.concord.dependencymanager.DependencyEntity;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DependencyPolicyTest {
 
@@ -110,6 +110,79 @@ public class DependencyPolicyTest {
                 "1.0.1");
 
         assertDeny(policy, dep4);
+    }
+
+    @Test
+    public void testNullRules() {
+        DependencyPolicy policy = new DependencyPolicy(null);
+        DependencyEntity dep = buildDependency("com.example", "artifact", "1.0.0");
+        CheckResult<DependencyRule, DependencyEntity> result = policy.check(Collections.singletonList(dep));
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testEmptyRules() {
+        PolicyRules<DependencyRule> rules = new PolicyRules<>(null, null, null);
+        DependencyPolicy policy = new DependencyPolicy(rules);
+        DependencyEntity dep = buildDependency("com.example", "artifact", "1.0.0");
+        CheckResult<DependencyRule, DependencyEntity> result = policy.check(Collections.singletonList(dep));
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testEmptyDependencyList() {
+        DependencyRule deny = DependencyRule.builder().groupId(".*").build();
+        PolicyRules<DependencyRule> rules = new PolicyRules<>(null, null, Collections.singletonList(deny));
+        DependencyPolicy policy = new DependencyPolicy(rules);
+
+        CheckResult<DependencyRule, DependencyEntity> result = policy.check(Collections.emptyList());
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testWarnResult() {
+        DependencyRule warnRule = DependencyRule.builder()
+                .groupId("com\\.example")
+                .build();
+
+        PolicyRules<DependencyRule> rules = new PolicyRules<>(null, Collections.singletonList(warnRule), null);
+        DependencyPolicy policy = new DependencyPolicy(rules);
+
+        DependencyEntity dep = buildDependency("com.example", "artifact", "1.0.0");
+        CheckResult<DependencyRule, DependencyEntity> result = policy.check(Collections.singletonList(dep));
+        assertTrue(result.getDeny().isEmpty());
+        assertFalse(result.getWarn().isEmpty());
+    }
+
+    @Test
+    public void testMultipleDependencies() {
+        DependencyRule deny = DependencyRule.builder()
+                .groupId("com\\.bad")
+                .build();
+
+        PolicyRules<DependencyRule> rules = new PolicyRules<>(null, null, Collections.singletonList(deny));
+        DependencyPolicy policy = new DependencyPolicy(rules);
+
+        DependencyEntity good = buildDependency("com.good", "artifact", "1.0.0");
+        DependencyEntity bad = buildDependency("com.bad", "artifact", "1.0.0");
+
+        CheckResult<DependencyRule, DependencyEntity> result = policy.check(Arrays.asList(good, bad));
+        assertFalse(result.getDeny().isEmpty());
+        assertEquals(1, result.getDeny().size());
+    }
+
+    @Test
+    public void testWildcardArtifactId() {
+        DependencyRule deny = DependencyRule.builder()
+                .groupId("com\\.example")
+                .artifactId(".*")
+                .build();
+
+        PolicyRules<DependencyRule> rules = new PolicyRules<>(null, null, Collections.singletonList(deny));
+        DependencyPolicy policy = new DependencyPolicy(rules);
+
+        DependencyEntity dep = buildDependency("com.example", "anything", "1.0.0");
+        assertDeny(policy, dep);
     }
 
     private static void assertDeny(DependencyPolicy policy, DependencyEntity entity) {

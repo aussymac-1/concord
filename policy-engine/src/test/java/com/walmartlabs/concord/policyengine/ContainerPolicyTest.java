@@ -25,8 +25,9 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ContainerPolicyTest {
 
@@ -56,6 +57,78 @@ public class ContainerPolicyTest {
 
         assertDeny(ram1, containerParams);
         assertAllow(ram2, containerParams);
+    }
+
+    @Test
+    public void testNullRule() {
+        ContainerPolicy policy = new ContainerPolicy(null);
+        CheckResult<ContainerRule, Object> result = policy.check(new HashMap<>());
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testEmptyContainerParams() {
+        ContainerPolicy policy = new ContainerPolicy(ContainerRule.of("msg", "256m", 2));
+        CheckResult<ContainerRule, Object> result = policy.check(new HashMap<>());
+        assertTrue(result.getDeny().isEmpty());
+    }
+
+    @Test
+    public void testBothCpuAndRamExceeded() {
+        ContainerPolicy policy = new ContainerPolicy(ContainerRule.of("msg", "128m", 1));
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("cpu", 4);
+        params.put("ram", "256m");
+
+        CheckResult<ContainerRule, Object> result = policy.check(params);
+        assertEquals(2, result.getDeny().size());
+    }
+
+    @Test
+    public void testCpuExactlyAtLimit() {
+        ContainerPolicy policy = new ContainerPolicy(ContainerRule.of("msg", null, 2));
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("cpu", 2);
+
+        assertAllow(policy, params);
+    }
+
+    @Test
+    public void testRamGigabytes() {
+        ContainerPolicy policy = new ContainerPolicy(ContainerRule.of("msg", "1g", null));
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("ram", "512m");
+        assertAllow(policy, params);
+
+        params.put("ram", "2g");
+        assertDeny(policy, params);
+    }
+
+    @Test
+    public void testOnlyMaxCpuSet() {
+        ContainerPolicy policy = new ContainerPolicy(ContainerRule.of("msg", null, 2));
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("cpu", 1);
+        params.put("ram", "999g");
+
+        // ram is not checked because maxRam is null
+        assertAllow(policy, params);
+    }
+
+    @Test
+    public void testOnlyMaxRamSet() {
+        ContainerPolicy policy = new ContainerPolicy(ContainerRule.of("msg", "128m", null));
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("cpu", 999);
+        params.put("ram", "64m");
+
+        // cpu is not checked because maxCpu is null
+        assertAllow(policy, params);
     }
 
     private static void assertAllow(ContainerPolicy policy, Map<String, Object> p) {
