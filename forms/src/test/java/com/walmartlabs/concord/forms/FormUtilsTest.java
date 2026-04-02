@@ -241,6 +241,7 @@ public class FormUtilsTest {
     public void testConvertNullMap() throws FormUtils.ValidationException {
         Form form = Form.builder()
                 .name("testForm")
+                .eventName("testEvent")
                 .build();
         Map<String, Object> result = FormUtils.convert(new TestLocale(), form, null);
         assertTrue(result.isEmpty());
@@ -248,26 +249,26 @@ public class FormUtilsTest {
 
     private static class TestLocale implements FormValidatorLocale {
         @Override
-        public String noFieldsDefined(String formName) { return "no fields"; }
+        public String noFieldsDefined(String formId) { return "no fields"; }
         @Override
-        public String fieldIsMandatory(String formName, FormField field) { return "mandatory"; }
+        public String invalidCardinality(String formId, FormField field, Object value) { return "invalid cardinality"; }
         @Override
-        public String invalidCardinality(String formName, FormField field, Object value) { return "invalid cardinality"; }
+        public String expectedString(String formId, FormField field, Integer idx, Object value) { return "expected string"; }
         @Override
-        public String doesntMatchPattern(String formName, FormField field, Integer idx, String pattern, Object value) { return "no match"; }
+        public String expectedInteger(String formId, FormField field, Integer idx, Object value) { return "expected int"; }
         @Override
-        public String integerRangeError(String formName, FormField field, Integer idx, Long min, Long max, Object value) { return "range error"; }
+        public String expectedDecimal(String formId, FormField field, Integer idx, Object value) { return "expected decimal"; }
         @Override
-        public String decimalRangeError(String formName, FormField field, Integer idx, Double min, Double max, Object value) { return "range error"; }
+        public String expectedBoolean(String formId, FormField field, Integer idx, Object value) { return "expected boolean"; }
         @Override
-        public String valueNotAllowed(String formName, FormField field, Integer idx, Object allowed, Object value) { return "not allowed"; }
+        public String doesntMatchPattern(String formId, FormField field, Integer idx, String pattern, Object value) { return "no match"; }
         @Override
-        public String expectedString(String formName, FormField field, Integer idx, Object value) { return "expected string"; }
+        public String integerRangeError(String formId, FormField field, Integer idx, Long min, Long max, Object value) { return "range error"; }
         @Override
-        public String expectedInteger(String formName, FormField field, Integer idx, Object value) { return "expected int"; }
+        public String decimalRangeError(String formId, FormField field, Integer idx, Double min, Double max, Object value) { return "range error"; }
         @Override
-        public String expectedDecimal(String formName, FormField field, Integer idx, Object value) { return "expected decimal"; }
+        public String valueNotAllowed(String formId, FormField field, Integer idx, Object allowed, Object value) { return "not allowed"; }
         @Override
-        public String expectedBoolean(String formName, FormField field, Integer idx, Object value) { return "expected boolean"; }
+        public String expectedDate(String formId, FormField field, Integer idx, Object value) { return "expected date"; }
     }
 }
