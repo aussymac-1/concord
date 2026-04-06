@@ -38,7 +38,7 @@ class ConcordExceptionTest {
 
     @Test
     void testMessageWithPayload() {
-        Map<String, Object> payload = new HashMap<>();
+        var payload = new HashMap<String, Object>();
         payload.put("code", 42);
         payload.put("detail", "timeout");
 

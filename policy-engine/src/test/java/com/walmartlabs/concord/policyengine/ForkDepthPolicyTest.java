@@ -35,7 +35,7 @@ class ForkDepthPolicyTest {
 
     @Test
     void testDepthBelowMax() throws Exception {
-        ForkDepthRule rule = ForkDepthRule.of("too deep", 5);
+        var rule = ForkDepthRule.of("too deep", 5);
         var policy = new ForkDepthPolicy(rule);
         var result = policy.check(() -> 3);
         assertTrue(result.getDeny().isEmpty());
@@ -43,7 +43,7 @@ class ForkDepthPolicyTest {
 
     @Test
     void testDepthAtMax() throws Exception {
-        ForkDepthRule rule = ForkDepthRule.of("too deep", 5);
+        var rule = ForkDepthRule.of("too deep", 5);
         var policy = new ForkDepthPolicy(rule);
         var result = policy.check(() -> 5);
         assertFalse(result.getDeny().isEmpty());
@@ -51,7 +51,7 @@ class ForkDepthPolicyTest {
 
     @Test
     void testDepthAboveMax() throws Exception {
-        ForkDepthRule rule = ForkDepthRule.of("too deep", 5);
+        var rule = ForkDepthRule.of("too deep", 5);
         var policy = new ForkDepthPolicy(rule);
         var result = policy.check(() -> 10);
         assertFalse(result.getDeny().isEmpty());
@@ -59,7 +59,7 @@ class ForkDepthPolicyTest {
 
     @Test
     void testDepthZero() throws Exception {
-        ForkDepthRule rule = ForkDepthRule.of("too deep", 5);
+        var rule = ForkDepthRule.of("too deep", 5);
         var policy = new ForkDepthPolicy(rule);
         var result = policy.check(() -> 0);
         assertTrue(result.getDeny().isEmpty());

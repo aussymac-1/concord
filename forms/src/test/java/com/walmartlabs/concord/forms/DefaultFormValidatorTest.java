@@ -36,7 +36,7 @@ class DefaultFormValidatorTest {
                 .eventName("testEvent")
                 .build();
 
-        List<ValidationError> errors = validator.validate(form, Collections.emptyMap());
+        var errors = validator.validate(form, Collections.emptyMap());
         assertFalse(errors.isEmpty());
     }
 
@@ -56,10 +56,10 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        Map<String, Object> data = new HashMap<>();
+        var data = new HashMap<String, Object>();
         data.put("myField", "hello");
 
-        List<ValidationError> errors = validator.validate(form, data);
+        var errors = validator.validate(form, data);
         assertTrue(errors.isEmpty());
     }
 
@@ -79,10 +79,10 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        Map<String, Object> data = new HashMap<>();
+        var data = new HashMap<String, Object>();
         data.put("age", 25);
 
-        List<ValidationError> errors = validator.validate(form, data);
+        var errors = validator.validate(form, data);
         assertTrue(errors.isEmpty());
     }
 
@@ -102,10 +102,10 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        Map<String, Object> data = new HashMap<>();
+        var data = new HashMap<String, Object>();
         data.put("age", "not-a-number");
 
-        List<ValidationError> errors = validator.validate(form, data);
+        var errors = validator.validate(form, data);
         assertFalse(errors.isEmpty());
         assertEquals("age", errors.get(0).fieldName());
     }
@@ -126,10 +126,10 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        Map<String, Object> data = new HashMap<>();
+        var data = new HashMap<String, Object>();
         data.put("agree", true);
 
-        List<ValidationError> errors = validator.validate(form, data);
+        var errors = validator.validate(form, data);
         assertTrue(errors.isEmpty());
     }
 
@@ -149,10 +149,10 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        Map<String, Object> data = new HashMap<>();
+        var data = new HashMap<String, Object>();
         data.put("agree", "notBoolean");
 
-        List<ValidationError> errors = validator.validate(form, data);
+        var errors = validator.validate(form, data);
         assertFalse(errors.isEmpty());
     }
 
@@ -172,7 +172,7 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        List<ValidationError> errors = validator.validate(form, Collections.emptyMap());
+        var errors = validator.validate(form, Collections.emptyMap());
         assertTrue(errors.isEmpty());
     }
 
@@ -193,9 +193,9 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        Map<String, Object> data = new HashMap<>();
+        var data = new HashMap<String, Object>();
         data.put("color", "red");
-        List<ValidationError> errors = validator.validate(form, data);
+        var errors = validator.validate(form, data);
         assertTrue(errors.isEmpty());
 
         data.put("color", "yellow");
@@ -219,9 +219,9 @@ class DefaultFormValidatorTest {
                 .addFields(field)
                 .build();
 
-        Map<String, Object> data = new HashMap<>();
+        var data = new HashMap<String, Object>();
         data.put("price", 9.99);
-        List<ValidationError> errors = validator.validate(form, data);
+        var errors = validator.validate(form, data);
         assertTrue(errors.isEmpty());
 
         data.put("price", "not-a-decimal");

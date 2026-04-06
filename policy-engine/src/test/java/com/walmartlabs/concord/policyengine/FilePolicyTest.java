@@ -59,7 +59,7 @@ class FilePolicyTest {
     void testDenyByFileName() throws IOException {
         Files.writeString(tempDir.resolve("secret.key"), "sensitive");
 
-        FileRule denyRule = new FileRule("no key files", null, "FILE", List.of(".*\\.key"));
+        var denyRule = new FileRule("no key files", null, "FILE", List.of(".*\\.key"));
         var rules = new PolicyRules<>(
                 Collections.emptyList(), Collections.emptyList(), Collections.singletonList(denyRule));
         var policy = new FilePolicy(rules);
@@ -72,8 +72,8 @@ class FilePolicyTest {
     void testAllowOverridesDeny() throws IOException {
         Files.writeString(tempDir.resolve("secret.key"), "sensitive");
 
-        FileRule allowRule = new FileRule(null, null, "FILE", List.of(".*\\.key"));
-        FileRule denyRule = new FileRule("no key files", null, "FILE", List.of(".*\\.key"));
+        var allowRule = new FileRule(null, null, "FILE", List.of(".*\\.key"));
+        var denyRule = new FileRule("no key files", null, "FILE", List.of(".*\\.key"));
         var rules = new PolicyRules<>(
                 Collections.singletonList(allowRule), Collections.emptyList(), Collections.singletonList(denyRule));
         var policy = new FilePolicy(rules);
@@ -86,7 +86,7 @@ class FilePolicyTest {
     void testWarnByFileName() throws IOException {
         Files.writeString(tempDir.resolve("large.dat"), "data");
 
-        FileRule warnRule = new FileRule("large file warning", null, "FILE", List.of(".*\\.dat"));
+        var warnRule = new FileRule("large file warning", null, "FILE", List.of(".*\\.dat"));
         var rules = new PolicyRules<>(
                 Collections.emptyList(), Collections.singletonList(warnRule), Collections.emptyList());
         var policy = new FilePolicy(rules);
@@ -100,7 +100,7 @@ class FilePolicyTest {
     void testNoMatchingFiles() throws IOException {
         Files.writeString(tempDir.resolve("readme.txt"), "hello");
 
-        FileRule denyRule = new FileRule("no key files", null, "FILE", List.of(".*\\.key"));
+        var denyRule = new FileRule("no key files", null, "FILE", List.of(".*\\.key"));
         var rules = new PolicyRules<>(
                 Collections.emptyList(), Collections.emptyList(), Collections.singletonList(denyRule));
         var policy = new FilePolicy(rules);

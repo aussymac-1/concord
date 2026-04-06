@@ -49,13 +49,13 @@ class EntityPolicyTest {
 
     @Test
     void testDenyRule() {
-        EntityRule denyRule = EntityRule.builder()
+        var denyRule = EntityRule.builder()
                 .entity("project")
                 .action("create")
                 .msg("project creation denied")
                 .build();
 
-        var rules = new PolicyRules<>(
+        var rules = new PolicyRules<EntityRule>(
                 Collections.emptyList(), Collections.emptyList(), Collections.singletonList(denyRule));
         var policy = new EntityPolicy(rules);
 
@@ -65,18 +65,18 @@ class EntityPolicyTest {
 
     @Test
     void testAllowRuleOverridesDeny() {
-        EntityRule allowRule = EntityRule.builder()
+        var allowRule = EntityRule.builder()
                 .entity("project")
                 .action("create")
                 .build();
 
-        EntityRule denyRule = EntityRule.builder()
+        var denyRule = EntityRule.builder()
                 .entity("project")
                 .action("create")
                 .msg("denied")
                 .build();
 
-        var rules = new PolicyRules<>(
+        var rules = new PolicyRules<EntityRule>(
                 Collections.singletonList(allowRule), Collections.emptyList(), Collections.singletonList(denyRule));
         var policy = new EntityPolicy(rules);
 
@@ -86,13 +86,13 @@ class EntityPolicyTest {
 
     @Test
     void testWarnRule() {
-        EntityRule warnRule = EntityRule.builder()
+        var warnRule = EntityRule.builder()
                 .entity("project")
                 .action("create")
                 .msg("warning")
                 .build();
 
-        var rules = new PolicyRules<>(
+        var rules = new PolicyRules<EntityRule>(
                 Collections.emptyList(), Collections.singletonList(warnRule), Collections.emptyList());
         var policy = new EntityPolicy(rules);
 
@@ -103,21 +103,21 @@ class EntityPolicyTest {
 
     @Test
     void testDenyWithConditions() {
-        Map<String, Object> conditions = new HashMap<>();
+        var conditions = new HashMap<String, Object>();
         conditions.put("orgName", "restricted-org");
 
-        EntityRule denyRule = EntityRule.builder()
+        var denyRule = EntityRule.builder()
                 .entity("project")
                 .action("create")
                 .conditions(conditions)
                 .msg("denied for org")
                 .build();
 
-        var rules = new PolicyRules<>(
+        var rules = new PolicyRules<EntityRule>(
                 Collections.emptyList(), Collections.emptyList(), Collections.singletonList(denyRule));
         var policy = new EntityPolicy(rules);
 
-        Map<String, Object> attrs = new HashMap<>();
+        var attrs = new HashMap<String, Object>();
         attrs.put("orgName", "restricted-org");
         var result = policy.check("project", "create", () -> attrs);
         assertFalse(result.getDeny().isEmpty());
@@ -125,13 +125,13 @@ class EntityPolicyTest {
 
     @Test
     void testDenyRuleDoesNotMatchDifferentEntity() {
-        EntityRule denyRule = EntityRule.builder()
+        var denyRule = EntityRule.builder()
                 .entity("secret")
                 .action("create")
                 .msg("denied")
                 .build();
 
-        var rules = new PolicyRules<>(
+        var rules = new PolicyRules<EntityRule>(
                 Collections.emptyList(), Collections.emptyList(), Collections.singletonList(denyRule));
         var policy = new EntityPolicy(rules);
 

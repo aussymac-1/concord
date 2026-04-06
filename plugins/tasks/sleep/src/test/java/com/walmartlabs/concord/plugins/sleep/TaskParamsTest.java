@@ -35,7 +35,7 @@ class TaskParamsTest {
 
     @Test
     void testDuration() {
-        Map<String, Object> input = new HashMap<>();
+        var input = new HashMap<String, Object>();
         input.put("duration", 5);
         var params = new TaskParams(input);
         assertEquals(5, params.duration());
@@ -43,41 +43,41 @@ class TaskParamsTest {
 
     @Test
     void testDurationNull() {
-        Map<String, Object> input = new HashMap<>();
+        var input = new HashMap<String, Object>();
         var params = new TaskParams(input);
         assertNull(params.duration());
     }
 
     @Test
     void testUntilWithDate() {
-        Map<String, Object> input = new HashMap<>();
-        Date future = new Date(System.currentTimeMillis() + 60000);
+        var input = new HashMap<String, Object>();
+        var future = new Date(System.currentTimeMillis() + 60000);
         input.put("until", future);
         var params = new TaskParams(input);
-        Instant result = params.until();
+        var result = params.until();
         assertNotNull(result);
     }
 
     @Test
     void testUntilWithString() {
-        Map<String, Object> input = new HashMap<>();
-        String dateStr = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(ZonedDateTime.now().plusHours(1));
+        var input = new HashMap<String, Object>();
+        var dateStr = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(ZonedDateTime.now().plusHours(1));
         input.put("until", dateStr);
         var params = new TaskParams(input);
-        Instant result = params.until();
+        var result = params.until();
         assertNotNull(result);
     }
 
     @Test
     void testUntilNull() {
-        Map<String, Object> input = new HashMap<>();
+        var input = new HashMap<String, Object>();
         var params = new TaskParams(input);
         assertNull(params.until());
     }
 
     @Test
     void testUntilInvalidString() {
-        Map<String, Object> input = new HashMap<>();
+        var input = new HashMap<String, Object>();
         input.put("until", "not-a-date");
         var params = new TaskParams(input);
         assertThrows(IllegalArgumentException.class, params::until);
@@ -85,7 +85,7 @@ class TaskParamsTest {
 
     @Test
     void testUntilInvalidType() {
-        Map<String, Object> input = new HashMap<>();
+        var input = new HashMap<String, Object>();
         input.put("until", 12345);
         var params = new TaskParams(input);
         assertThrows(IllegalArgumentException.class, params::until);
@@ -93,14 +93,14 @@ class TaskParamsTest {
 
     @Test
     void testSuspendDefault() {
-        Map<String, Object> input = new HashMap<>();
+        var input = new HashMap<String, Object>();
         var params = new TaskParams(input);
         assertFalse(params.suspend());
     }
 
     @Test
     void testSuspendTrue() {
-        Map<String, Object> input = new HashMap<>();
+        var input = new HashMap<String, Object>();
         input.put("suspend", true);
         var params = new TaskParams(input);
         assertTrue(params.suspend());

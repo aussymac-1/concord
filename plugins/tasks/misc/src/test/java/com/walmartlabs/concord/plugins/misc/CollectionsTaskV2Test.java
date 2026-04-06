@@ -30,68 +30,68 @@ class CollectionsTaskV2Test {
 
     @Test
     void testConcatTwoLists() {
-        List<String> a = Arrays.asList("a", "b");
-        List<String> b = Arrays.asList("c", "d");
-        List<String> result = CollectionsTaskV2.concat(a, b);
+        var a = Arrays.asList("a", "b");
+        var b = Arrays.asList("c", "d");
+        var result = CollectionsTaskV2.concat(a, b);
         assertEquals(Arrays.asList("a", "b", "c", "d"), result);
     }
 
     @Test
     void testConcatWithNullList() {
-        List<String> a = Arrays.asList("a", "b");
-        List<String> result = CollectionsTaskV2.concat(a, null);
+        var a = Arrays.asList("a", "b");
+        var result = CollectionsTaskV2.concat(a, null);
         assertEquals(Arrays.asList("a", "b"), result);
     }
 
     @Test
     void testConcatEmptyLists() {
-        List<String> result = CollectionsTaskV2.concat(Collections.emptyList(), Collections.emptyList());
+        var result = CollectionsTaskV2.concat(Collections.emptyList(), Collections.emptyList());
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testConcatAsSet() {
-        List<String> a = Arrays.asList("a", "b", "a");
-        List<String> b = Arrays.asList("b", "c");
-        Set<String> result = CollectionsTaskV2.concatAsSet(a, b);
+        var a = Arrays.asList("a", "b", "a");
+        var b = Arrays.asList("b", "c");
+        var result = CollectionsTaskV2.concatAsSet(a, b);
         assertEquals(new HashSet<>(Arrays.asList("a", "b", "c")), result);
     }
 
     @Test
     void testConcatAsSetWithNull() {
-        List<String> a = Arrays.asList("x", "y");
-        Set<String> result = CollectionsTaskV2.concatAsSet(a, null);
+        var a = Arrays.asList("x", "y");
+        var result = CollectionsTaskV2.concatAsSet(a, null);
         assertEquals(new HashSet<>(Arrays.asList("x", "y")), result);
     }
 
     @Test
     void testReverse() {
-        List<String> input = Arrays.asList("a", "b", "c");
-        List<String> result = CollectionsTaskV2.reverse(input);
+        var input = Arrays.asList("a", "b", "c");
+        var result = CollectionsTaskV2.reverse(input);
         assertEquals(Arrays.asList("c", "b", "a"), result);
     }
 
     @Test
     void testReverseEmpty() {
-        List<String> result = CollectionsTaskV2.reverse(Collections.emptyList());
+        var result = CollectionsTaskV2.reverse(Collections.emptyList());
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testRange() {
-        List<Integer> result = CollectionsTaskV2.range(5);
+        var result = CollectionsTaskV2.range(5);
         assertEquals(Arrays.asList(0, 1, 2, 3, 4), result);
     }
 
     @Test
     void testRangeZero() {
-        List<Integer> result = CollectionsTaskV2.range(0);
+        var result = CollectionsTaskV2.range(0);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testNewMap() {
-        Map<String, Object> result = CollectionsTaskV2.newMap();
+        var result = CollectionsTaskV2.newMap();
         assertNotNull(result);
         assertTrue(result.isEmpty());
         assertTrue(result instanceof LinkedHashMap);

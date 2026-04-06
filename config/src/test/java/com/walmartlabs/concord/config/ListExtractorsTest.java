@@ -34,48 +34,48 @@ class ListExtractorsTest {
 
     @Test
     void testExtractStringList() {
-        Config config = ConfigFactory.parseString("myList = [\"a\", \"b\", \"c\"]");
-        Optional<List<?>> result = ListExtractors.extractConfigListValue(config, String.class, "myList");
+        var config = ConfigFactory.parseString("myList = [\"a\", \"b\", \"c\"]");
+        var result = ListExtractors.extractConfigListValue(config, String.class, "myList");
         assertTrue(result.isPresent());
         assertEquals(List.of("a", "b", "c"), result.get());
     }
 
     @Test
     void testExtractIntegerList() {
-        Config config = ConfigFactory.parseString("myList = [1, 2, 3]");
-        Optional<List<?>> result = ListExtractors.extractConfigListValue(config, Integer.class, "myList");
+        var config = ConfigFactory.parseString("myList = [1, 2, 3]");
+        var result = ListExtractors.extractConfigListValue(config, Integer.class, "myList");
         assertTrue(result.isPresent());
         assertEquals(List.of(1, 2, 3), result.get());
     }
 
     @Test
     void testExtractBooleanList() {
-        Config config = ConfigFactory.parseString("myList = [true, false, true]");
-        Optional<List<?>> result = ListExtractors.extractConfigListValue(config, Boolean.class, "myList");
+        var config = ConfigFactory.parseString("myList = [true, false, true]");
+        var result = ListExtractors.extractConfigListValue(config, Boolean.class, "myList");
         assertTrue(result.isPresent());
         assertEquals(List.of(true, false, true), result.get());
     }
 
     @Test
     void testExtractDoubleList() {
-        Config config = ConfigFactory.parseString("myList = [1.1, 2.2, 3.3]");
-        Optional<List<?>> result = ListExtractors.extractConfigListValue(config, Double.class, "myList");
+        var config = ConfigFactory.parseString("myList = [1.1, 2.2, 3.3]");
+        var result = ListExtractors.extractConfigListValue(config, Double.class, "myList");
         assertTrue(result.isPresent());
         assertEquals(3, result.get().size());
     }
 
     @Test
     void testExtractLongList() {
-        Config config = ConfigFactory.parseString("myList = [100, 200, 300]");
-        Optional<List<?>> result = ListExtractors.extractConfigListValue(config, Long.class, "myList");
+        var config = ConfigFactory.parseString("myList = [100, 200, 300]");
+        var result = ListExtractors.extractConfigListValue(config, Long.class, "myList");
         assertTrue(result.isPresent());
         assertEquals(List.of(100L, 200L, 300L), result.get());
     }
 
     @Test
     void testUnknownTypeReturnsEmpty() {
-        Config config = ConfigFactory.parseString("myList = [1, 2]");
-        Optional<List<?>> result = ListExtractors.extractConfigListValue(config, Void.class, "myList");
+        var config = ConfigFactory.parseString("myList = [1, 2]");
+        var result = ListExtractors.extractConfigListValue(config, Void.class, "myList");
         assertFalse(result.isPresent());
     }
 }

@@ -23,6 +23,8 @@ package com.walmartlabs.concord.plugins.misc;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +34,7 @@ class DateTimeTaskV2Test {
     @Test
     void testCurrent() {
         var task = new DateTimeTaskV2();
-        Date now = task.current();
+        var now = task.current();
         assertNotNull(now);
         assertTrue(Math.abs(now.getTime() - System.currentTimeMillis()) < 5000);
     }
@@ -40,7 +42,7 @@ class DateTimeTaskV2Test {
     @Test
     void testCurrentWithPattern() {
         var task = new DateTimeTaskV2();
-        String result = task.current("yyyy-MM-dd");
+        var result = task.current("yyyy-MM-dd");
         assertNotNull(result);
         assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"));
     }
@@ -48,7 +50,7 @@ class DateTimeTaskV2Test {
     @Test
     void testCurrentISO() {
         var task = new DateTimeTaskV2();
-        String result = task.currentISO();
+        var result = task.currentISO();
         assertNotNull(result);
         assertTrue(result.contains("T"));
     }
@@ -56,7 +58,7 @@ class DateTimeTaskV2Test {
     @Test
     void testCurrentWithZone() {
         var task = new DateTimeTaskV2();
-        String result = task.currentWithZone("UTC", "yyyy-MM-dd HH:mm");
+        var result = task.currentWithZone("UTC", "yyyy-MM-dd HH:mm");
         assertNotNull(result);
         assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}"));
     }
@@ -64,8 +66,8 @@ class DateTimeTaskV2Test {
     @Test
     void testFormat() {
         var task = new DateTimeTaskV2();
-        Date date = new Date(0);
-        String result = task.format(date, "yyyy");
+        var date = Date.from(ZonedDateTime.of(1970, 6, 15, 12, 0, 0, 0, ZoneId.systemDefault()).toInstant());
+        var result = task.format(date, "yyyy");
         assertNotNull(result);
         assertEquals("1970", result);
     }
@@ -73,7 +75,7 @@ class DateTimeTaskV2Test {
     @Test
     void testParse() throws ParseException {
         var task = new DateTimeTaskV2();
-        Date result = task.parse("2023-06-15", "yyyy-MM-dd");
+        var result = task.parse("2023-06-15", "yyyy-MM-dd");
         assertNotNull(result);
     }
 }

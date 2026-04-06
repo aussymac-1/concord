@@ -32,7 +32,7 @@ class MemoSupplierTest {
     @Test
     void testMemoizesValue() {
         var counter = new AtomicInteger(0);
-        Supplier<String> memo = MemoSupplier.memo(() -> {
+        var memo = MemoSupplier.memo(() -> {
             counter.incrementAndGet();
             return "hello";
         });
@@ -46,7 +46,7 @@ class MemoSupplierTest {
     @Test
     void testMemoizesNullValue() {
         var counter = new AtomicInteger(0);
-        Supplier<String> memo = MemoSupplier.memo(() -> {
+        var memo = MemoSupplier.memo(() -> {
             counter.incrementAndGet();
             return null;
         });

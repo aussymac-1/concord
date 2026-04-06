@@ -31,7 +31,7 @@ class ExceptionUtilsTest {
     @Test
     void testGetExceptionListSingle() {
         var ex = new RuntimeException("root");
-        List<Throwable> list = ExceptionUtils.getExceptionList(ex);
+        var list = ExceptionUtils.getExceptionList(ex);
         assertEquals(1, list.size());
         assertSame(ex, list.get(0));
     }
@@ -42,7 +42,7 @@ class ExceptionUtilsTest {
         var mid = new IllegalStateException("mid", root);
         var top = new Exception("top", mid);
 
-        List<Throwable> list = ExceptionUtils.getExceptionList(top);
+        var list = ExceptionUtils.getExceptionList(top);
         assertEquals(3, list.size());
         assertSame(top, list.get(0));
         assertSame(mid, list.get(1));
@@ -51,7 +51,7 @@ class ExceptionUtilsTest {
 
     @Test
     void testGetExceptionListNull() {
-        List<Throwable> list = ExceptionUtils.getExceptionList(null);
+        var list = ExceptionUtils.getExceptionList(null);
         assertTrue(list.isEmpty());
     }
 
@@ -61,7 +61,7 @@ class ExceptionUtilsTest {
         var mid = new RuntimeException("mid", root);
         var top = new RuntimeException("top", mid);
 
-        RuntimeException result = ExceptionUtils.findLastException(top, RuntimeException.class);
+        var result = ExceptionUtils.findLastException(top, RuntimeException.class);
         assertSame(root, result);
     }
 
@@ -71,7 +71,7 @@ class ExceptionUtilsTest {
         var top = new RuntimeException("top", root);
 
         // When no IllegalStateException exists, should return the original exception
-        RuntimeException result = ExceptionUtils.findLastException(top, RuntimeException.class);
+        var result = ExceptionUtils.findLastException(top, RuntimeException.class);
         assertSame(root, result);
     }
 
@@ -81,7 +81,7 @@ class ExceptionUtilsTest {
         var top = new RuntimeException("top", root);
 
         // findLastException with RuntimeException.class should find top (not root which is just Exception)
-        RuntimeException result = ExceptionUtils.findLastException(top, RuntimeException.class);
+        var result = ExceptionUtils.findLastException(top, RuntimeException.class);
         assertSame(top, result);
     }
 }

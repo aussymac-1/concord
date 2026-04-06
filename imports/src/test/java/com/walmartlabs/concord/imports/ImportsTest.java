@@ -31,56 +31,56 @@ class ImportsTest {
 
     @Test
     void testEmptyImports() {
-        Imports imports = Imports.of(Collections.emptyList());
+        var imports = Imports.of(Collections.emptyList());
         assertTrue(imports.isEmpty());
         assertTrue(imports.items().isEmpty());
     }
 
     @Test
     void testNonEmptyImports() {
-        Import.GitDefinition git = Import.GitDefinition.builder()
+        var git = Import.GitDefinition.builder()
                 .url("https://github.com/example/repo")
                 .version("main")
                 .build();
-        Imports imports = Imports.of(Collections.singletonList(git));
+        var imports = Imports.of(Collections.singletonList(git));
         assertFalse(imports.isEmpty());
         assertEquals(1, imports.items().size());
     }
 
     @Test
     void testMerge() {
-        Import.GitDefinition git = Import.GitDefinition.builder()
+        var git = Import.GitDefinition.builder()
                 .url("https://github.com/example/repo")
                 .version("main")
                 .build();
-        Import.MvnDefinition mvn = Import.MvnDefinition.builder()
+        var mvn = Import.MvnDefinition.builder()
                 .url("mvn://com.example:artifact:1.0")
                 .build();
 
-        Imports a = Imports.of(Collections.singletonList(git));
-        Imports b = Imports.of(Collections.singletonList(mvn));
+        var a = Imports.of(Collections.singletonList(git));
+        var b = Imports.of(Collections.singletonList(mvn));
 
-        Imports merged = Imports.merge(a, b);
+        var merged = Imports.merge(a, b);
         assertEquals(2, merged.items().size());
     }
 
     @Test
     void testMergeWithEmpty() {
-        Import.GitDefinition git = Import.GitDefinition.builder()
+        var git = Import.GitDefinition.builder()
                 .url("https://github.com/example/repo")
                 .version("main")
                 .build();
 
-        Imports a = Imports.of(Collections.singletonList(git));
-        Imports empty = Imports.of(Collections.emptyList());
+        var a = Imports.of(Collections.singletonList(git));
+        var empty = Imports.of(Collections.emptyList());
 
-        Imports merged = Imports.merge(a, empty);
+        var merged = Imports.merge(a, empty);
         assertEquals(1, merged.items().size());
     }
 
     @Test
     void testGitDefinitionType() {
-        Import.GitDefinition git = Import.GitDefinition.builder()
+        var git = Import.GitDefinition.builder()
                 .url("https://github.com/example/repo")
                 .version("main")
                 .path("/sub")
@@ -96,7 +96,7 @@ class ImportsTest {
 
     @Test
     void testMvnDefinitionType() {
-        Import.MvnDefinition mvn = Import.MvnDefinition.builder()
+        var mvn = Import.MvnDefinition.builder()
                 .url("mvn://com.example:artifact:1.0")
                 .dest("lib")
                 .build();
@@ -108,7 +108,7 @@ class ImportsTest {
 
     @Test
     void testDirectoryDefinitionType() {
-        Import.DirectoryDefinition dir = Import.DirectoryDefinition.builder()
+        var dir = Import.DirectoryDefinition.builder()
                 .src("/some/path")
                 .dest("out")
                 .build();
@@ -120,27 +120,27 @@ class ImportsTest {
 
     @Test
     void testHideSensitiveDataNoUserInfo() {
-        String url = "https://github.com/example/repo";
+        var url = "https://github.com/example/repo";
         assertEquals(url, Import.hideSensitiveData(url));
     }
 
     @Test
     void testHideSensitiveDataWithUserInfo() {
-        String url = "https://user:password@github.com/example/repo";
-        String result = Import.hideSensitiveData(url);
+        var url = "https://user:password@github.com/example/repo";
+        var result = Import.hideSensitiveData(url);
         assertFalse(result.contains("password"));
         assertTrue(result.contains("***"));
     }
 
     @Test
     void testHideSensitiveDataInvalidUrl() {
-        String url = "not-a-url";
+        var url = "not-a-url";
         assertEquals(url, Import.hideSensitiveData(url));
     }
 
     @Test
     void testNoopImportManager() {
-        NoopImportManager mgr = new NoopImportManager();
+        var mgr = new NoopImportManager();
         var result = mgr.process(Imports.of(Collections.emptyList()), null, null);
         assertTrue(result.isEmpty());
     }
