@@ -66,13 +66,13 @@ class ExceptionUtilsTest {
     }
 
     @Test
-    void testFindLastExceptionNoMatch() {
-        var root = new RuntimeException("root");
+    void testFindLastExceptionOnlyTopMatches() {
+        var root = new Exception("root");
         var top = new RuntimeException("top", root);
 
-        // When no IllegalStateException exists, should return the original exception
+        // Only 'top' is a RuntimeException; root is plain Exception
         var result = ExceptionUtils.findLastException(top, RuntimeException.class);
-        assertSame(root, result);
+        assertSame(top, result);
     }
 
     @Test
