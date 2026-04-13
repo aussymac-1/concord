@@ -22,6 +22,8 @@ package com.walmartlabs.concord.common;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ThreadLocalStackTest {
@@ -57,13 +59,21 @@ public class ThreadLocalStackTest {
         var stack = new ThreadLocalStack<String>();
         stack.push("main");
 
+        var failure = new AtomicReference<Throwable>();
         var thread = new Thread(() -> {
-            assertNull(stack.peek());
-            stack.push("other");
-            assertEquals("other", stack.peek());
+            try {
+                assertNull(stack.peek());
+                stack.push("other");
+                assertEquals("other", stack.peek());
+            } catch (Throwable t) {
+                failure.set(t);
+            }
         });
         thread.start();
         thread.join();
+        if (failure.get() != null) {
+            throw failure.get();
+        }
 
         assertEquals("main", stack.peek());
     }
