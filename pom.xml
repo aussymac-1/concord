@@ -610,5 +610,21 @@
                 </site>
             </distributionManagement>
         </profile>
+        <profile>
+            <!--
+                Activates the JaCoCo agent and test-phase report for all modules.
+                Kept in a profile (rather than always-on) so normal builds are not
+                slowed down by instrumentation. Invoke with: mvn test -Pcoverage
+            -->
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
