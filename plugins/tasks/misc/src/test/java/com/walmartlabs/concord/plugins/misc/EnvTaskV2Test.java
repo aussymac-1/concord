@@ -22,8 +22,6 @@ package com.walmartlabs.concord.plugins.misc;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -53,7 +51,7 @@ public class EnvTaskV2Test {
     public void getReturnsRealEnvironmentVariableWhenSet() {
         var task = new EnvTaskV2();
         // Find any env var that is set and verify the task reads it back.
-        Map.Entry<String, String> any = System.getenv().entrySet().stream()
+        var any = System.getenv().entrySet().stream()
                 .filter(e -> e.getValue() != null)
                 .findFirst()
                 .orElse(null);

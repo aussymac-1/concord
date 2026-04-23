@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -98,8 +97,8 @@ public class CollectionsTaskV2Test {
 
     @Test
     public void newMapReturnsDistinctInstances() {
-        Map<String, Object> a = CollectionsTaskV2.newMap();
-        Map<String, Object> b = CollectionsTaskV2.newMap();
+        var a = CollectionsTaskV2.newMap();
+        var b = CollectionsTaskV2.newMap();
         assertNotSame(a, b);
     }
 }

@@ -22,7 +22,6 @@ package com.walmartlabs.concord.plugins.sleep;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -75,7 +74,7 @@ public class ConstantsTest {
 
     @Test
     public void constructorIsPrivate() throws Exception {
-        Constructor<Constants> ctor = Constants.class.getDeclaredConstructor();
+        var ctor = Constants.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(ctor.getModifiers()));
         ctor.setAccessible(true);
         assertNotNull(ctor.newInstance());

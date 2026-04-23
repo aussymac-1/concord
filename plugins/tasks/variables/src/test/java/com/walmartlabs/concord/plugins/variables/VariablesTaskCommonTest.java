@@ -58,8 +58,8 @@ public class VariablesTaskCommonTest {
 
     @Test
     public void concatResultIsIndependentOfInputs() {
-        List<Object> a = new ArrayList<>(List.<Object>of(1));
-        List<Object> b = new ArrayList<>(List.<Object>of(2));
+        var a = new ArrayList<>(List.<Object>of(1));
+        var b = new ArrayList<>(List.<Object>of(2));
         var result = VariablesTaskCommon.concat(a, b);
         a.add(99);
         b.add(100);
