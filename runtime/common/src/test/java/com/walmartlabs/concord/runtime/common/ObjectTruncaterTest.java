@@ -152,4 +152,94 @@ public class ObjectTruncaterTest {
         Object result = ObjectTruncater.truncate(value, maxStringLength, maxArrayLength, maxDepth);
         assertEquals(Collections.<String, Object>singletonMap("k", "1...[skipped 8 chars]...0"), result);
     }
+
+    @Test
+    public void testTruncateNull() {
+        assertNull(ObjectTruncater.truncate(null, 10, 10, 10));
+    }
+
+    @Test
+    public void testTruncateMapNull() {
+        Map<String, Object> result = ObjectTruncater.truncateMap(null, 10, 10, 10);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testTruncateMapEmpty() {
+        Map<String, Object> result = ObjectTruncater.truncateMap(Collections.emptyMap(), 10, 10, 10);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testTruncateEmptyCollection() {
+        Object result = ObjectTruncater.truncate(Collections.emptyList(), 10, 10, 10);
+        assertEquals(Collections.emptyList(), result);
+    }
+
+    @Test
+    public void testTruncateEmptyArray() {
+        Object[] empty = new Object[0];
+        Object result = ObjectTruncater.truncate(empty, 10, 10, 10);
+        assertArrayEquals(empty, (Object[]) result);
+    }
+
+    @Test
+    public void testTruncateEmptyPrimitiveArray() {
+        int[] empty = new int[0];
+        Object result = ObjectTruncater.truncate(empty, 10, 10, 10);
+        assertSame(empty, result);
+    }
+
+    @Test
+    public void testTruncateObjectArray() {
+        Object[] value = {"a", "b", "c", "d", "e"};
+
+        Object result = ObjectTruncater.truncate(value, 100, 2, 2);
+        assertTrue(result instanceof Collection);
+    }
+
+    @Test
+    public void testTruncateIntegerValue() {
+        Object result = ObjectTruncater.truncate(42, 10, 10, 10);
+        assertEquals(42, result);
+    }
+
+    @Test
+    public void testTruncateMapMaxDepthReached() {
+        Map<String, Object> nested = new HashMap<>();
+        nested.put("deep", "value");
+        Map<String, Object> value = new HashMap<>();
+        value.put("child", nested);
+
+        Object result = ObjectTruncater.truncate(value, 100, 100, 0);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> resultMap = (Map<String, Object>) result;
+        @SuppressWarnings("unchecked")
+        Map<String, Object> child = (Map<String, Object>) resultMap.get("child");
+        assertEquals("skipped: max depth reached", child.get("_"));
+    }
+
+    @Test
+    public void testTruncateCollectionMaxDepthReached() {
+        List<Object> value = Arrays.asList(1, 2, 3);
+
+        Object result = ObjectTruncater.truncate(value, 100, 100, -1);
+        assertEquals(Collections.singletonList("skipped: max depth reached"), result);
+    }
+
+    @Test
+    public void testTruncatePrimitiveArrayMaxDepthReached() {
+        int[] value = {1, 2, 3};
+
+        Object result = ObjectTruncater.truncate(value, 100, 100, -1);
+        assertArrayEquals(new String[]{"skipped: max depth reached"}, (String[]) result);
+    }
+
+    @Test
+    public void testTruncateObjectArrayMaxDepthReached() {
+        Object[] value = {"a", "b", "c"};
+
+        Object result = ObjectTruncater.truncate(value, 100, 100, -1);
+        assertArrayEquals(new String[]{"skipped: max depth reached"}, (String[]) result);
+    }
 }
