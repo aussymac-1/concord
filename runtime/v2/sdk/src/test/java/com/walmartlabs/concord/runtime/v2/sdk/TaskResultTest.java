@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -139,7 +138,7 @@ public class TaskResultTest {
 
     @Test
     public void testReentrantSuspend() {
-        Map<String, Serializable> payload = new HashMap<>();
+        var payload = new HashMap<String, Serializable>();
         payload.put("key", "value");
         var result = TaskResult.reentrantSuspend("myEvent", payload);
         assertTrue(result instanceof TaskResult.ReentrantSuspendResult);
