@@ -61,7 +61,9 @@ public class UsernamePassword implements Secret {
             byte[] ab = new byte[len];
             in.readFully(ab);
 
-            char[] password = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(ab)).array();
+            CharBuffer cb = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(ab));
+            char[] password = new char[cb.remaining()];
+            cb.get(password);
 
             return new UsernamePassword(username, password);
         } catch (IOException e) {
