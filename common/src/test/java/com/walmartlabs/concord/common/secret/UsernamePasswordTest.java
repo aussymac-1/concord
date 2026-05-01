@@ -46,7 +46,7 @@ public class UsernamePasswordTest {
         UsernamePassword deserialized = UsernamePassword.deserialize(serialized);
 
         assertEquals("user\u00E9", deserialized.getUsername());
-        assertEquals("p\u00E4ss", new String(deserialized.getPassword()).trim());
+        assertArrayEquals("p\u00E4ss".toCharArray(), deserialized.getPassword());
     }
 
     @Test
