@@ -37,7 +37,7 @@ public final class HashUtils {
     public static String hashAsHexString(Object v) throws IOException {
         String s = objectMapper.writeValueAsString(v);
         HashCode hc = Hashing.sha1().hashString(s, StandardCharsets.UTF_8);
-        return Hex.encodeHexString(hc.asBytes());
+        return Hex.encodeHexString(hc.asBytes()).toUpperCase();
     }
 
     private HashUtils() {
