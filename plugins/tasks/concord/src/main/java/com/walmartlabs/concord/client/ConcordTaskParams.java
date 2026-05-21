@@ -24,7 +24,7 @@ import com.walmartlabs.concord.client2.CreateApiKeyRequest;
 import com.walmartlabs.concord.runtime.v2.sdk.MapBackedVariables;
 import com.walmartlabs.concord.runtime.v2.sdk.Variables;
 
-import javax.xml.bind.DatatypeConverter;
+import com.walmartlabs.concord.common.DateTimeUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -193,9 +193,9 @@ public class ConcordTaskParams {
             } else if (v instanceof Date) {
                 Calendar c = Calendar.getInstance();
                 c.setTime((Date) v);
-                return DatatypeConverter.printDateTime(c);
+                return DateTimeUtils.toIsoString(java.time.OffsetDateTime.ofInstant(c.toInstant(), java.time.ZoneId.of(c.getTimeZone().getID())));
             } else if (v instanceof Calendar) {
-                return DatatypeConverter.printDateTime((Calendar) v);
+                return DateTimeUtils.toIsoString(java.time.OffsetDateTime.ofInstant(((Calendar) v).toInstant(), java.time.ZoneId.of(((Calendar) v).getTimeZone().getID())));
             } else {
                 throw new IllegalArgumentException("'" + START_AT_KEY + "' must be a string, java.util.Date or java.util.Calendar value. Got: " + v);
             }
