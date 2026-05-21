@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.bind.DatatypeConverter;
+import org.apache.commons.codec.binary.Hex;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -255,7 +255,7 @@ public class DependencyManager {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(s.getBytes());
-            return DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
+            return Hex.encodeHexString(md.digest()).toUpperCase();
         } catch (Exception e) {
             throw new RuntimeException("Hash error", e);
         }
