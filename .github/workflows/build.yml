@@ -41,12 +41,12 @@ jobs:
 
     strategy:
       matrix:
-        profile: [ 'jdk17', 'jdk17-aarch64' ]
+        profile: [ 'jdk21', 'jdk21-aarch64' ]
         include:
-          - jdk_version: '17'
-          - profile: 'jdk17'
+          - jdk_version: '21'
+          - profile: 'jdk21'
             runs_on: ubuntu-24.04
-          - profile: 'jdk17-aarch64'
+          - profile: 'jdk21-aarch64'
             runs_on: ubuntu-24.04-arm
       fail-fast: false
 
